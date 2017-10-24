@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.TB.TBox.user.mapper.UserMapper">
+	<insert id="addUser" parameterType="User" useGeneratedKeys="true"
+		keyProperty="uid">
+		insert into mood_user(number,password,phone,ufacing)
+		values(#{number},#{password},#{phone},#{ufacing})
+	</insert>
+	<update id="createRole" parameterType="User">
+		update mood_user set
+		username=#{username},#{place},constellation=#{constellation},blood=#{blood},signature=#{signature},birthday=#{birthday},ufacing=#{ufacing},hobby=#{hobby},job=#{job},gender=#{gender},personalPassword=#{personalPassword},age=#{age}
+		where uid=#{uid}
+	</update>
+
+	<update id="updateRole" parameterType="User">
+		update mood_user set
+		phone=#{phone},password=#{password},place=#{place},username=#{username},constellation=#{constellation},blood=#{blood},signature=#{signature},birthday=#{birthday},ufacing=#{ufacing},hobby=#{hobby},job=#{job},gender=#{gender},personalPassword=#{personalPassword},age=#{age}
+		where uid=#{uid}
+	</update>
+	<select id="selectUserByPhone" parameterType="String"
+		resultType="User">
+		select * from mood_user where phone = #{phone}
+	</select>
+	<select id="selectUserByID" parameterType="int" resultType="User">
+		select * from mood_user where uid = #{uid}
+	</select>
+
+	<select id="selectUserByNumber" parameterType="String"
+		resultType="User">
+		select * from mood_user where number = #{number}
+	</select>
+	<!-- 对用户的模糊查询为添加好友做准备 -->
+	<select id="selectUserByVagueUsername" parameterType="String"
+		resultMap="userList">
+		select * from mood_user where username like
+		concat(concat('%',#{username}),'%')
+	</select>
+	<!-- 对用户的模糊查询为添加好友做准备 -->
+	<select id="selectUserByVaguePhone" parameterType="String"
+		resultMap="userList">
+		select * from mood_user where phone like
+		concat(concat('%',#{phone}),'%')
+	</select>
+	<!-- 对用户的模糊查询为添加好友做准备 -->
+	<select id="selectUserByByVagueNumber" parameterType="String"
+		resultType="User">
+		select * from mood_user where number like
+		concat(concat('%',#{number}),'%')
+	</select>
+	<select id="selectUserByUsername" parameterType="String"
+		resultMap="userList">
+		select * from mood_user where username = #{username}
+	</select>
+	<resultMap type="User" id="userList">
+		<id column="uid" property="uid" />
+		<result column="number" property="number" />
+		<result column="place" property="place" />
+		<result column="username" property="username" />
+		<result column="constellation" property="constellation" />
+		<result column="blood" property="blood" />
+		<result column="signature" property="signature" />
+		<result column="birthday" property="birthday" />
+		<result column="ufacing" property="ufacing" />
+		<result column="hobby" property="hobby" />
+		<result column="job" property="job" />
+		<result column="gender" property="gender" />
+		<result column="age" property="age" />
+	</resultMap>
+	<!-- 用户心情模块的操作 -->
+	<insert id="addUserMoodColor" parameterType="Mood_color">
+		insert into
+		mood_color(uid,happy,angry,sad,scard,commen)
+		values(#{uid},#{happy},#{angry},#{sad},#{scard},#{commen})
+	</insert>
+	<update id="updateMoodColor" parameterType="Mood_color">
+		update mood_color set
+		happy=#{happy},angry=#{angry},sad=#{sad},scard=#{scard},commen=#{commen}
+		where uid=#{uid}
+	</update>
+	<select id="selectUserMoodColor" parameterType="int" resultType="Mood_color">
+		select * from mood_color where uid = #{uid}
+	</select>
+</mapper>

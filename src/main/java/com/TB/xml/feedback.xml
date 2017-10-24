@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.TB.back.FeedBackMapper">
+	<insert id="addFeedBack" parameterType="FeedBack"
+		useGeneratedKeys="true" keyProperty="fe_id">
+		insert into
+		mood_feedback(uid,content,fe_time)
+		values(#{uid},#{content},#{fe_time})
+	</insert>
+</mapper>

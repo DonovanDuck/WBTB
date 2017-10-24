@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.TB.TBox.topic.mapper.TopicMapper">
+	<!-- 添加讨论 -->
+	<insert id="addTopic" parameterType="Topic">
+		insert into mood_topic (topicContent,time,uid,title) values (#{topicContent},#{time},#{user.uid},#{title})
+	</insert>
+	
+	<!-- 按题目显示 -->
+	<select id="findTopicbyT" parameterType="String" resultType="Topic">
+		select * from mood_topic where title = #{title} order by topicId desc
+	</select>
+	
+	<select id="finduid" parameterType="int" resultType="int">
+		select uid from mood_topic where topicId = #{topicId}
+	</select>
+	 <resultMap type="com.TB.TBox.topic.bean.Topic" id="Topic">
+    	<id	 column="topicId" property="topicId" />
+		<result column="topicContent" property="topicContent" />
+		<result column="time" property="time" />
+		<result column="goodNum" property="goodNum" />
+		<result column="opinionNumber" property="opinionNumber" />
+		<result column="title" property="title" />
+		<association property="user" column="uid" select="com.TB.TBox.user.mapper.UserMapper.selectUserByID" />
+		
+    </resultMap>
+</mapper>

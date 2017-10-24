@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.TB.TBox.user.mapper.FriendMapper">
+	<insert id="addFriend" parameterType="Friends" useGeneratedKeys="true"
+		keyProperty="fid">
+		insert into
+		mood_friend(friendNumber,friendUsername,cid,friendTime,friendNickname,facing,uid,recoverFriend)
+		values(#{friendNumber},#{friendUsername},#{cid},#{friendTime},#{friendNickname},#{facing},#{uid},#{recoverFriend})
+	</insert>
+	<!-- 添加好友时查询的是用户表 -->
+
+	<!-- 查询好友(按备注) -->
+	<select id="selectFriendsByUsername" parameterType="Map"
+		resultMap="friendsList">
+		select * from mood_friend where uid=#{uid} and
+		recoverFriend=#{recoverFriend} and friendUsername like
+		concat(concat('%',#{friendUsername}),'%')
+	</select>
+	<!-- 查询好友(按账号) -->
+	<select id="selectFriendsByNumber" parameterType="Map"
+		resultMap="friendsList">
+		select * from mood_friend where uid=#{uid} and
+		recoverFriend=#{recoverFriend} and friendNumber like
+		concat(concat('%',#{friendNumber}),'%')
+	</select>
+	<!-- 查询好友（按名字） -->
+	<select id="selectFriendsByNickname" parameterType="Map"
+		resultMap="friendsList">
+		select * from mood_friend where uid=#{uid} and
+		recoverFriend=#{recoverFriend} and friendNickname like
+		concat(concat('%',#{friendNickname}),'%')
+	</select>
+	<!-- 查询所有 -->
+	<select id="selectAllFriends" parameterType="Map" resultMap="friendsList">
+		select * from mood_friend where uid=#{uid} and
+		recoverFriend=#{recoverFriend}
+	</select>
+	<resultMap type="Friends" id="friendsList">
+		<id column="fid" property="fid" />
+		<result column="friendNumber" property="friendNumber" />
+		<result column="friendUsername" property="friendUsername" />
+		<result column="cid" property="cid" />
+		<result column="friendTime" property="friendTime" />
+		<result column="friendNickname" property="friendNickname" />
+		<result column="facimg" property="facimg" />
+		<!-- <result column="uid" property="uid" /> -->
+		<result column="friendContent" property="friendContent" />
+	</resultMap>
+	<!-- 按id查询为修改做准备 -->
+	<select id="selectFriendByFid" parameterType="int" resultType="Friends">
+		select * from mood_friend where fid=#{fid}
+	</select>
+	<!-- 按uid 和friendNumber查询，用来判断添加的好友是否是已经删除的好友 -->
+	<select id="selectFriendByUidAndNumber" parameterType="Map" resultType="Friends">
+		select * from mood_friend where uid=#{uid} and friendNumber=#{friendNumber} and recoverFriend=#{recoverFriend}
+	</select>
+	<update id="updateFriendName" parameterType="Friends">
+		update mood_friend
+		set friendUsername=#{friendUsername} where fid=#{fid}
+	</update>
+	<update id="deleteFriend" parameterType="Friends">
+		update mood_friend set
+		recoverFriend=#{recoverFriend} where fid=#{fid}
+	</update>
+
+	<!-- 好友便签部分 -->
+	<!-- 添加便签 -->
+	<insert id="addMemo" parameterType="Memo" useGeneratedKeys="true"
+		keyProperty="memoId">
+		insert into
+		mood_memo(uid,fid,memoName,friendContent)
+		values(#{uid},#{fid},#{memoName},#{friendContent})
+	</insert>
+	<!-- 修改便签 -->
+	<update id="updateMemo" parameterType="Memo">
+		update mood_memo set
+		memoName=#{memoName},friendContent=#{friendContent}where
+		memoId=#{memoId}
+	</update>
+	<!-- 查询便签 -->
+	<select id="selectMemoById" parameterType="int" resultType="Memo">
+		select * from mood_memo where memoId=#{memoId}
+	</select>
+	<select id="selectMemo" parameterType="Map" resultMap="memoList">
+		select * from mood_memo where uid=#{uid} and fid=#{fid}
+	</select>
+	<resultMap type="Memo" id="memoList">
+		<id column="memoId" property="memoId" />
+		<result column="memoName" property="memoName" />
+		<result column="friendContent" property="friendContent" />
+	</resultMap>
+	<!-- 删除便签 -->
+	<delete id="deleteMemo" parameterType="int">
+		delete from mood_memo where memoId=#{memoId}
+	</delete>
+
+</mapper>
